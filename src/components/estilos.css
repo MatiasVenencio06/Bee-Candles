@@ -1,0 +1,74 @@
+.carritoPanal {
+    background-image: url('/icons/panalCarrito.png');
+    background-position: 0px 0px;
+    width: 60px;
+    height: 60px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    animation-fill-mode: forwards;
+}
+
+@keyframes animatePanal {
+    to {background-position: -7140px;}
+}
+
+i.added {
+    animation: animatePanal 1s steps(119) infinite;
+}
+
+.vela404 {
+    background-image: url('/icons/spreet-velas.jpg');
+    background-position: 0px 0px;
+    width: 60px;
+    height: 60px;
+    background-size: cover;
+    background-repeat: no-repeat;
+    animation-fill-mode: forwards;
+    animation: vela404 2s steps(60) infinite;
+}
+
+@keyframes vela404 {
+    to {background-position: -3600px;}
+}
+
+
+/*  */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 7px;
+}
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+::-webkit-scrollbar-thumb {
+  background: #e380ff;
+  border: 0px none #ffffff;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #fff08f;
+}
+::-webkit-scrollbar-thumb:active {
+  background: #fff08f;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: 1px none transparent;
+  border-radius: 16px;
+}
+::-webkit-scrollbar-track:hover {
+  background: transparent;
+}
+::-webkit-scrollbar-track:active {
+  background: transparent;
+}
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
