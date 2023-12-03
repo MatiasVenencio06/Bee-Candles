@@ -51,7 +51,7 @@ function NavBar() {
     return (
       <Row>
         <Col xs={{span: 0}} md={{span: 24}}>
-          <Menu mode='horizontal' >
+          <Menu mode='horizontal' style={{position: 'sticky'}}>
               <div style={{width: '100vw', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                 <div style={{paddingTop: '.4rem', paddingLeft: '1rem'}}>
                   <Link to={'/'}>

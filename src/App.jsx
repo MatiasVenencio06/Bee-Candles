@@ -7,6 +7,7 @@ import { ConfigProvider } from 'antd'
 import NotFound from './components/404'
 import SkeletonCard from './components/skeletonCard'
 import Prueba from './components/fireBaseCall'
+import Home from './components/home'
 
 function App() {
 
@@ -23,9 +24,9 @@ function App() {
           <NavBar/>
           <section>
             <Routes>
-              <Route path='/' element={<h1 style={{display: 'flex', justifyContent: 'center'}}>Home</h1>} />
-              <Route path='/sobre-nosotros' element={<Prueba></Prueba>} />
-              <Route path='categoria/velas-aromaticas' element={<div><SkeletonCard/></div>}></Route>
+              <Route path='/' element={<Home/>} />
+              <Route path='/sobre-nosotros' element={<Prueba/>} />
+              <Route path='/categoria/velas-aromaticas' element={<div><SkeletonCard/></div>}></Route>
               <Route path='*' element={<NotFound/>}></Route>
             </Routes>
           </section>
