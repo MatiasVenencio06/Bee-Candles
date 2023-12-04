@@ -16,7 +16,6 @@ function Prueba() {
                 setMostrar('no haay datos que mostrar')
             }
             setMostrar(res.data)
-            console.log(res.docs)
         })
     }, [])
 
