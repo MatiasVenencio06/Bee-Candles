@@ -5,13 +5,15 @@ import './estilos.css'
 import NavBarMobile from './navBarComponents/mobileNavBar'
 import { Link } from 'react-router-dom';
 import SkeletonCard from './skeletonCard'
-import { CartContext } from '../context/CartContext'
+import { useCartContext } from '../context/CartContext'
 
-function NavBar() { 
+
+function NavBar({display}) { 
   const [collapsed, setCollapsed] = useState(true)
   const [drawerOpen, setDrawerOpen] = useState(false)
   const [productoAdd, setProductoAdd] = useState('')
-  const { cartCounter, setCartCounter } = useContext(CartContext)
+  const [clicked, setClicked] = useState(false)
+  const { cartCounter, setCartCounter, total, AddToCart, RemoveFromCart, DeleteProduct } = useCartContext()
   
   useEffect(() => {
     setProductoAdd('added')
@@ -19,6 +21,10 @@ function NavBar() {
       setProductoAdd('')
     }, 1000)
   }, [cartCounter])
+
+  useEffect(() => {
+    setCartCounter(cartCounter)
+  }, [clicked])
 
   const showDrawer = () => {
     setDrawerOpen(true)
@@ -44,39 +50,25 @@ function NavBar() {
     {
       key: '2',
       label: (
-        <a target="_blank" rel="noopener noreferrer" href="https://www.aliyun.com">
-          2nd menu item (disabled)
-        </a>
+        <Link rel="noopener noreferrer" to={'categoria/velas-sin-frasco'}>
+          Velas sin frasco
+        </Link>
       ),
-      icon: <SmileOutlined />,
-      disabled: true,
     },
     {
-      key: '4',
-      danger: true,
-      label: 'a danger item',
+      key: '3',
+      label: (
+        <Link rel="noopener noreferrer" to={'categoria/bombones-aromaticos'}>
+          Bombones aromaticos
+        </Link>
+      ),
     },
   ];
 
-  const calcularPrecioTotal = () => {
-    let total = 0
-    cartCounter.forEach(item => {
-      total += item.precio
-    });
-    return total
-  }
-
-  const precioTotal = calcularPrecioTotal()
-
-  const handleDeleteProduct = (index) => {
-    const updatedCart = cartCounter.filter((_, i) => i !== index)
-    setCartCounter(updatedCart)
-  }
-
     return (
-      <Row>
+      <Row style={{display: `${display}`}}>
         <Col xs={{span: 0}} md={{span: 24}}>
-          <Menu mode='horizontal' style={{position: 'fixed', zIndex: 1}}>
+          <Menu mode='horizontal' style={{position: 'fixed', zIndex: 1000}}>
               <div style={{width: '100vw', display: 'flex', flexDirection: 'row', justifyContent: 'space-between'}}>
                 <div style={{paddingTop: '.4rem', paddingLeft: '1rem'}}>
                   <Link to={'/'}>
@@ -85,16 +77,16 @@ function NavBar() {
                   </Link>
                 </div>
                 <Menu.ItemGroup style={{display: 'flex', paddingLeft: '0rem'}}>
-                  <Menu.Item key={'categoria'} style={{padding: '.3rem'}}>
+                  <Menu.Item key={'categoria'} style={{padding: '.3rem', paddingTop: '1rem', paddingBottom: '1rem'}}>
                     <Dropdown menu={{ items }} trigger={['click']} onClick={toggleCollapsed}>
-                      <Typography>Categoria{collapsed ? <DownOutlined/> : <UpOutlined/>}</Typography>
+                      <Typography>Categoria <DownOutlined/></Typography>
                     </Dropdown>
                   </Menu.Item>
-                    <Menu.Item key={'sobre-nosotros'} style={{padding: '.3rem'}}>
-                      <Link to={'/sobre-nosotros'}>
-                        Sobre Nosotros
-                      </Link>
-                    </Menu.Item>
+                  <Menu.Item key={'sobre-nosotros'} style={{padding: '.3rem'}}>
+                    <Link to={'/sobre-nosotros'}>
+                      Sobre Nosotros
+                    </Link>
+                  </Menu.Item>
                 </Menu.ItemGroup>
                 <div style={{display: 'flex', alignItems: 'center'}}>
                     <Input size='large' style={{width: '13rem', marginRight: '1rem'}} placeholder='Search...' prefix={<SearchOutlined/>}/>
@@ -111,20 +103,31 @@ function NavBar() {
                         {cartCounter.map((item, index) => (
                           <Fragment key={index}>
                             <Row style={{width: '100%', marginBottom: '1rem'}}>
-                              <Col style={{width: '80%', border: '1px solid #fff', borderRadius: '8px 0 0 8px', padding: '10px'}}>
+                              <Col style={{width: '83%', border: '1px solid #fff', borderRadius: '8px 0 0 8px', padding: '10px'}}>
                                 <Col style={{display: 'flex'}}>
                                   <img style={{width: '4rem', borderRadius: '4px'}} src={item.imgs[0]} alt=""/>
-                                  <p>{item.nombre}</p>
-                                  <p style={{marginLeft: 'auto', display: 'flex', alignItems: 'center', color: 'GrayText'}}><b>${item.precio}</b></p>  
+                                  <Col>
+                                    <p>{item.cantidad}x {item.nombre}</p> 
+                                    <Col style={{marginTop: 'auto'}}>
+                                      <Button style={{borderRadius: '8px 0 0 8px'}} onClick={() => (RemoveFromCart(item), setClicked(!clicked))}>-</Button>
+                                      <Button style={{borderRadius: '0 8px 8px 0'}} onClick={() => (AddToCart(item, 1), setClicked(!clicked))}>+</Button>
+                                    </Col>   
+                                  </Col>
+                                  <p style={{marginLeft: 'auto', display: 'flex', alignItems: 'center', color: 'GrayText'}}><b>${item.precio * item.cantidad}</b></p>  
                                 </Col>
                               </Col>
                               <Col>
-                                <Button style={{borderRadius: '0 8px 8px 0', backgroundColor: 'rgb(255 149 149)', height: '100%'}} onClick={() => handleDeleteProduct(index)}><DeleteOutlined style={{fontSize: 20}}/></Button>
+                                <Button style={{borderRadius: '0 8px 8px 0', backgroundColor: 'rgb(255 149 149)', height: '100%'}} onClick={() => DeleteProduct(item)}><DeleteOutlined style={{fontSize: 20}}/></Button>
                               </Col>
                             </Row>
                           </Fragment>
                           ))}
-                          <h3>${precioTotal}</h3>
+                          <h3>Precio total: ${total()}</h3>
+                          <Link to={'/generar-orden'}>
+                            <Button style={{marginTop: '1rem', width: '100%'}} onClick={() => setDrawerOpen(false)}>
+                              Comprar
+                            </Button>
+                          </Link>
                         </> : <>
                           <Tag color='red' style={{backgroundColor: 'transparent',display: 'flex', justifyContent: 'center', padding: '1rem', fontSize: '1rem'}}>No tienes ningun producto en tu carrito 🥱</Tag>
                         </> 

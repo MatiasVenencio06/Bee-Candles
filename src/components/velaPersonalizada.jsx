@@ -29,7 +29,7 @@ function VelaPersonalizada() {
       })
   }, [])
 
-
+  const conditionalWidth = () => window.innerWidth > 500 ? '60vw' : '100vw'
     return (
         <Row style={{display: 'flex', justifyContent: 'center', marginTop: '1rem'}}>
             <Card
